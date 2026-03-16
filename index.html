@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seyhan Cafe | Menü</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3d2314;
+            --accent: #e8b86d;
+            --cream: #fff8f0;
+            --coffee: #8b5a2b;
+            --gold: #d4a853;
+            --warm-brown: #a67c52;
+            --deep-coffee: #5d3a1a;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--cream);
+            color: var(--primary);
+            overflow-x: hidden;
+        }
+
+        /* Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .coffee-cup {
+            width: 80px;
+            height: 60px;
+            border: 4px solid var(--accent);
+            border-radius: 0 0 40px 40px;
+            position: relative;
+            animation: steam 2s infinite;
+        }
+
+        .coffee-cup::before {
+            content: '';
+            position: absolute;
+            right: -25px;
+            top: 10px;
+            width: 20px;
+            height: 30px;
+            border: 4px solid var(--accent);
+            border-radius: 0 20px 20px 0;
+        }
+
+        .steam {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: rise 2s infinite;
+        }
+
+        .steam:nth-child(2) { left: 30%; animation-delay: 0.3s; }
+        .steam:nth-child(3) { left: 70%; animation-delay: 0.6s; }
+
+        @keyframes rise {
+            0% { opacity: 0; transform: translateY(0) scale(1); }
+            50% { opacity: 0.6; }
+            100% { opacity: 0; transform: translateY(-30px) scale(1.5); }
+        }
+
+        @keyframes steam {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Hero Section - CAFE ARKA PLANLI */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(61,35,20,0.85), rgba(93,58,26,0.85)), 
+                        url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1920');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            color: #fff5e6;
+        }
+
+        .hero-content p {
+            font-size: 1.8rem;
+            margin-bottom: 40px;
+            font-weight: 300;
+            opacity: 0.95;
+            color: #ffe4c4;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 18px 50px;
+            background: linear-gradient(135deg, var(--accent), #f4c430);
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(232, 184, 109, 0.6);
+            background: linear-gradient(135deg, #f4c430, #ffd700);
+        }
+
+        /* Kategori Seçim - CAFE ARKA PLANLI */
+        .category-selection {
+            display: none;
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(61,35,20,0.92), rgba(93,58,26,0.92)), 
+                        url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1920');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 80px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .category-selection.active {
+            display: block;
+        }
+
+        .category-selection h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 50px;
+            color: #fff5e6;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .category-box {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 3px solid var(--accent);
+            border-radius: 20px;
+            padding: 60px 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.2);
+            border-color: #f4c430;
+        }
+
+        .category-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        } 
+        .category-image{
+width:120px;
+height:120px;
+margin:auto;
+margin-bottom:20px;
+border-radius:50%;
+overflow:hidden;
+border:4px solid var(--accent);
+box-shadow:0 5px 20px rgba(0,0,0,0.3);
+}
+
+.category-image img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.category-box{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+}
+
+
+        .category-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #fff5e6;
+        }
+         .categories{
+          display:grid;
+          grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+        gap:20px;
+        padding:20px;
+         }
+
+         .category-card{
+        height:160px;
+         border-radius:15px; 
+        overflow:hidden;
+        position:relative;
+          cursor:pointer;
+         box-shadow:0 8px 20px rgba(0,0,0,0.25);
+          transition:transform 0.3s ease;
+            }
+
+         .category-card:hover{
+         transform:scale(1.05);
+         }
+
+.category-bg{
+width:100%;
+height:100%;
+background-size:cover;
+background-position:center;
+filter:brightness(0.75);
+transition:transform 0.4s;
+}
+
+.category-card:hover .category-bg{
+transform:scale(1.1);
+}
+
+.category-name{
+position:absolute;
+bottom:15px;
+left:50%;
+transform:translateX(-50%);
+color:white;
+font-size:20px;
+font-weight:bold;
+background:rgba(0,0,0,0.45);
+padding:6px 15px;
+border-radius:20px;
+}
+ 
+        /* Ürün Sayfaları - CAFE ARKA PLANLI */
+        .product-page {
+            display: none;
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(61,35,20,0.92), rgba(93,58,26,0.92)), 
+                        url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1920');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 40px 20px;
+        }
+
+        .product-page.active {
+            display: block;
+        }
+
+        /* Sayfa Başlığı - FOTOĞRAFLI YENİ TASARIM */
+        .page-header {
+            position: relative;
+            margin-bottom: 50px;
+            border-radius: 20px;
+            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto 50px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .page-header-bg {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .page-header-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.5);
+        }
+
+        .page-header-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .page-header-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: #fff5e6;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 15px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 30px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s;
+            border: 2px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-button:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Ürün Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border-color: var(--accent);
+        }
+
+        .product-main {
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+        }
+
+        .product-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .product-info .subtitle {
+            font-size: 0.9rem;
+            color: var(--coffee);
+            font-weight: 500;
+        }
+
+        .product-price-main {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--coffee);
+        }
+
+        /* Seçenekler (Accordion) */
+        .options-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            background: linear-gradient(to bottom, #fdf8f3, #f5ebe0);
+        }
+
+        .options-container.open {
+            max-height: 600px;
+        }
+
+        .options-list {
+            padding: 20px 30px;
+            border-top: 2px dashed var(--accent);
+        }
+
+        .option-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e8d5c4;
+        }
+
+        .option-item:last-child {
+            border-bottom: none;
+        }
+
+        .option-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .option-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        .option-price {
+            font-weight: 600;
+            color: var(--coffee);
+        }
+
+        /* Çeşit göstergesi */
+        .variety-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: linear-gradient(135deg, var(--accent), #f4c430);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        /* Basit ürün (seçenek yok) - FOTOĞRAFLI */
+        .simple-product .product-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+        }
+
+        .simple-product .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Çeşitli ürünler için fotoğraf stili */
+        .has-options .product-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+        }
+
+        .has-options .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.5rem; }
+            .page-header-bg { height: 150px; }
+            .page-header-content h2 { font-size: 2rem; }
+            .product-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div style="position: relative;">
+            <div class="steam"></div>
+            <div class="steam"></div>
+            <div class="steam"></div>
+            <div class="coffee-cup"></div>
+        </div>
+    </div>
+
+    <!-- Ana Sayfa -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Seyhan Cafe</h1>
+            <p>Lezzetin ve Keyfin Buluşma Noktası</p>
+            <button class="cta-button" onclick="showCategories()">Menüye Git</button>
+        </div>
+    </section>
+
+    <!-- Kategori Seçim -->
+    <section class="category-selection" id="categories">
+        <h2>Kategori Seçin</h2>
+        <div class="category-grid">
+            <div class="category-box" onclick="showPage('icecekler')">
+               <div class="category-image">
+<img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400">
+</div>
+
+                <div class="category-name">İçecekler</div>
+            </div>
+            <div class="category-box" onclick="showPage('yiyecekler')">
+               <div class="category-image">
+<img src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=400">
+</div>
+
+                <div class="category-name">Yiyecekler</div>
+            </div>
+            <div class="category-box" onclick="showPage('tatlilar')">
+               <div class="category-image">
+<img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400">
+</div>
+
+                <div class="category-name">Tatlılar</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- İÇECEKLER -->
+    <section class="product-page" id="icecekler">
+        <!-- Fotoğraflı Başlık -->
+        <div class="page-header">
+            <div class="page-header-bg">
+                <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200" alt="İçecekler">
+                <div class="page-header-content">
+                    <h2>İçecekler</h2>
+                    <button class="back-button" onclick="goBack()">← Kategorilere Dön</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="product-grid">
+            <!-- ORALET - Çok çeşitli -->
+            <div class="product-card has-options" onclick="toggleOptions(this)">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://cf.kizlarsoruyor.com/q20707544/primary-share.png?29" alt="Oralet">
+                        </div>
+                        <div class="product-info">
+                            <h3>Oralet</h3>
+                            <span class="variety-badge">🍃 9 Çeşit ↓</span>
+                        </div>
+                    </div>
+                    <div class="product-price-main">40 ₺</div>
+                </div>
+                <div class="options-container">
+                    <div class="options-list">
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Kivi</span><span class="option-price">40 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Kakao</span><span class="option-price">40 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Karadut</span><span class="option-price">40 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Limon</span><span class="option-price">40 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Muz</span><span class="option-price">40 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Elma</span><span class="option-price">40 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Portakal</span><span class="option-price">40 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Nane-Limon</span><span class="option-price">40 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Kuşburnu</span><span class="option-price">40 ₺</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KUTU İÇECEKLER - Çok çeşitli (YENİ FOTOĞRAF) -->
+            <div class="product-card has-options" onclick="toggleOptions(this)">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://tse3.mm.bing.net/th/id/OIP.oH4ycetgfrTKWzGKS0wbOwHaE9?w=1920&h=1286&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Kutu İçecekler">
+                        </div>
+                        <div class="product-info">
+                            <h3>Kutu İçecekler</h3>
+                            <span class="variety-badge">🥤 6 Çeşit ↓</span>
+                        </div>
+                    </div>
+                    <div class="product-price-main">80 ₺</div>
+                </div>
+                <div class="options-container">
+                    <div class="options-list">
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Coca Cola</span><span class="option-price">80 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Fanta</span><span class="option-price">80 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Sprite</span><span class="option-price">80 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Cappy</span><span class="option-price">80 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Fuse Tea</span><span class="option-price">80 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Soğuk Çay</span><span class="option-price">80 ₺</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TÜRK KAHVESİ - Tek çeşit -->
+            <div class="product-card simple-product">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://www.bilgiustam.com/resimler/2018/03/12225_1.jpg" alt="Türk Kahvesi">
+                        </div>
+                        <div class="product-info">
+                            <h3>Türk Kahvesi</h3>
+                            <div class="subtitle">Geleneksel demleme</div>
+                        </div>
+                    </div>
+                    <div class="product-price-main">45 ₺</div>
+                </div>
+            </div>
+
+            <!-- ÇAY - Tek çeşit (YENİ FOTOĞRAF) -->
+            <div class="product-card simple-product">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://mucadelegazete.com/wp-content/uploads/2024/08/CAY-TIRYAKILERINE-KOTU-HABER.jpg" alt="Çay">
+                        </div>
+                        <div class="product-info">
+                            <h3>Çay</h3>
+                            <div class="subtitle">Bardak çay</div>
+                        </div>
+                    </div>
+                    <div class="product-price-main">25 ₺</div>
+                </div>
+            </div>
+
+            <!-- FİNCAN ÇAY - Tek çeşit (YENİ FOTOĞRAF) -->
+            <div class="product-card simple-product">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://www.cumhuriyetpark.net/upload/urunler/fincan_cay_1.jpg" alt="Fincan Çay">
+                        </div>
+                        <div class="product-info">
+                            <h3>Fincan Çay</h3>
+                            <div class="subtitle">Demli çay</div>
+                        </div>
+                    </div>
+                    <div class="product-price-main">35 ₺</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- YİYECEKLER -->
+    <section class="product-page" id="yiyecekler">
+        <!-- Fotoğraflı Başlık -->
+        <div class="page-header">
+            <div class="page-header-bg">
+                <img src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=1200" alt="Yiyecekler">
+                <div class="page-header-content">
+                    <h2>Yiyecekler</h2>
+                    <button class="back-button" onclick="goBack()">← Kategorilere Dön</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="product-grid">
+            <!-- TOST - Çok çeşitli -->
+            <div class="product-card has-options" onclick="toggleOptions(this)">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400" alt="Tost">
+                        </div>
+                        <div class="product-info">
+                            <h3>Tost </h3>
+                            <span class="variety-badge"> 4 Çeşit ↓</span>
+                        </div>
+                    </div>
+                    <div class="product-price-main">85-120₺</div>
+                </div>
+                <div class="options-container">
+                    <div class="options-list">
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Kaşarlı Tost</span><span class="option-price">85 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Sucuklu Tost</span><span class="option-price">100 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Karışık Tost</span><span class="option-price">120 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Kavurmalı Tost</span><span class="option-price">200 ₺</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MENEMEN - Çok çeşitli (YENİ FOTOĞRAF - Freepik yerine Unsplash) -->
+            <div class="product-card has-options" onclick="toggleOptions(this)">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://thumbs.dreamstime.com/b/turkish-menemen-eggs-scrambled-tomatoes-green-pepper-generative-ai-274760251.jpg" alt="Menemen">
+                        </div>
+                        <div class="product-info">
+                            <h3>Menemen </h3>
+                            <span class="variety-badge"> 4 Çeşit ↓</span>
+                        </div>
+                    </div>
+                    <div class="product-price-main">85-120₺</div>
+                </div>
+                <div class="options-container">
+                    <div class="options-list">
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Normal Menemen</span><span class="option-price">85 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Sucuklu Menemen</span><span class="option-price">100 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Kaşarlı Menemen</span><span class="option-price">100 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Karışık Menemen</span><span class="option-price">120 ₺</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SAHANDA YUMURTA - Çok çeşitli (YENİ FOTOĞRAF) -->
+            <div class="product-card has-options" onclick="toggleOptions(this)">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://tse1.mm.bing.net/th/id/OIP.RP1AJlwA7dudGbHNqB_EpwHaFX?pid=ImgDet&w=474&h=343&rs=1&o=7&rm=3" alt="Sahanda Yumurta">
+                        </div>
+                        <div class="product-info">
+                            <h3>Sahanda Yumurta </h3>
+                            <span class="variety-badge"> 5 Çeşit ↓</span>
+                        </div>
+                    </div>
+                    <div class="product-price-main">70-110₺</div>
+                </div>
+                <div class="options-container">
+                    <div class="options-list">
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Normal Yumurta (2 adet)</span><span class="option-price">70 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Sucuklu Yumurta</span><span class="option-price">95 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Kaşarlı Yumurta</span><span class="option-price">90 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Kavurmalı Yumurta</span><span class="option-price">110 ₺</span></div>
+                         <div class="option-item"><span class="option-name"><span class="option-dot"></span>Karışık Yumurta</span><span class="option-price">110 ₺</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GÖZLEME - Çok çeşitli (YENİ FOTOĞRAF) -->
+            <div class="product-card has-options" onclick="toggleOptions(this)">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://img.iamcook.ru/2020/upl/recipes/cat/u-636a50c05135c070022330387256894b.jpg" alt="Gözleme">
+                        </div>
+                        <div class="product-info">
+                            <h3>Gözleme </h3>
+                            <span class="variety-badge"> 4 Çeşit ↓</span>
+                        </div>
+                    </div>
+                    <div class="product-price-main">90-130₺</div>
+                </div>
+                <div class="options-container">
+                    <div class="options-list">
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Peynirli Gözleme</span><span class="option-price">90 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Sucuklu Gözleme</span><span class="option-price">110 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Kaşarlı Gözleme</span><span class="option-price">100 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Karışık Gözleme</span><span class="option-price">130 ₺</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SOĞUK SANDVİÇ - Tek çeşit (YENİ FOTOĞRAF) -->
+            <div class="product-card simple-product">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://img.lezizyemeklerim.com/tarif/1171/kolay-soguk-sandvic-tarifi/1920x1080.jpg" alt="Soğuk Sandviç">
+                        </div>
+                        <div class="product-info">
+                            <h3>Soğuk Sandviç</h3>
+                            <div class="subtitle">Salam, Peynir, Domates, Salatalık, Biber, Kıvırcık</div>
+                        </div>
+                    </div>
+                    <div class="product-price-main">110₺</div>
+                </div>
+            </div>
+
+            <!-- OMLET - Çok çeşitli -->
+            <div class="product-card has-options" onclick="toggleOptions(this)">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://th.bing.com/th/id/R.bca8d2c86e1509edd842c61ce73ec4fd?rik=RChT%2b8BY9txBUw&pid=ImgRaw&r=0" alt="Omlet">
+                        </div>
+                        <div class="product-info">
+                            <h3>Omlet </h3>
+                            <span class="variety-badge">5 Çeşit ↓</span>
+                        </div>
+                    </div>
+                    <div class="product-price-main">95-120₺</div>
+                </div>
+                <div class="options-container">
+                    <div class="options-list">
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Kaşarlı Omlet</span><span class="option-price">95 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Sucuklu Omlet</span><span class="option-price">110 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Peynirli Omlet</span><span class="option-price">100 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Kavurmalı Omlet</span><span class="option-price">95 ₺</span></div>
+                        <div class="option-item"><span class="option-name"><span class="option-dot"></span>Karışık Omlet</span><span class="option-price">95 ₺</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KAHVALTI TABAĞI - Tek çeşit (YENİ FOTOĞRAF) -->
+            <div class="product-card simple-product">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://i.pinimg.com/originals/0c/90/3e/0c903e609da7172c1068e14e951f6779.jpg" alt="Kahvaltı Tabağı">
+                        </div>
+                        <div class="product-info">
+                            <h3>Kahvaltı Tabağı</h3>
+                            <div class="subtitle">Serpme kahvaltı</div>
+                        </div>
+                    </div>
+                    <div class="product-price-main">120₺</div>
+                </div>
+            </div>
+
+            <!-- EKMEK ARASI KÖFTE - Tek çeşit -->
+            <div class="product-card simple-product">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://tse4.mm.bing.net/th/id/OIP.gbUJmZXEVbnZVghW0aUNKQHaE7?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Ekmek Arası Köfte">
+                        </div>
+                        <div class="product-info">
+                            <h3>Ekmek Arası Köfte</h3>
+                            <div class="subtitle">Izgara köfte</div>
+                        </div>
+                    </div>
+                    <div class="product-price-main">130₺</div>
+                </div>
+            </div>
+
+            <!-- PORSİYON KÖFTE - Tek çeşit (YENİ FOTOĞRAF) -->
+            <div class="product-card simple-product">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://media.istockphoto.com/photos/kofte-meatball-picture-id843120224?k=20&m=843120224&s=612x612&w=0&h=7fu9d8dOAVimcXVsr6zU-c5MzNt2IafQjwI-90aQETg=" alt="Porsiyon Köfte">
+                        </div>
+                        <div class="product-info">
+                            <h3>Porsiyon Köfte</h3>
+                            <div class="subtitle">Yanında patates kızartması ve domates</div>
+                        </div>
+                    </div>
+                    <div class="product-price-main">160₺</div>
+                </div>
+            </div>
+
+            <!-- PATSO - Tek çeşit -->
+            <div class="product-card simple-product">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://etrafcafe.com.tr/wp-content/uploads/2024/09/patso-patates-ekmek.webp" alt="Patso">
+                        </div>
+                        <div class="product-info">
+                            <h3>Patso</h3>
+                            <div class="subtitle">Patates kızartması ve sosis</div>
+                        </div>
+                    </div>
+                    <div class="product-price-main">75₺</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TATLILAR -->
+    <section class="product-page" id="tatlilar">
+        <!-- Fotoğraflı Başlık -->
+        <div class="page-header">
+            <div class="page-header-bg">
+                <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=1200" alt="Tatlılar">
+                <div class="page-header-content">
+                    <h2>Tatlılar</h2>
+                    <button class="back-button" onclick="goBack()">← Kategorilere Dön</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="product-grid">
+           
+
+            <!-- MAGNOLYA - Tek çeşit -->
+            <div class="product-card simple-product">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://tse1.mm.bing.net/th/id/OIP.VHakvJmoKjI74VY4mpp_ngHaE7?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Magnolya">
+                        </div>
+                        <div class="product-info">
+                            <h3>Magnolia</h3>
+                            <div class="subtitle">Kavanozda tatlı</div>
+                        </div>
+                    </div>
+                    <div class="product-price-main">140 ₺</div>
+                </div>
+            </div>
+
+
+            <!-- PROFİTEROL - Tek çeşit -->
+            <div class="product-card simple-product">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://i.pinimg.com/736x/c4/84/0b/c4840b88a7af95c93bba98e9a085112d.jpg" alt="Profiterol">
+                        </div>
+                        <div class="product-info">
+                            <h3>Profiterol</h3>
+                            <div class="subtitle">Çikolata soslu</div>
+                        </div>
+                    </div>
+                    <div class="product-price-main">110 ₺</div>
+                </div>
+            </div>
+
+            
+
+            <!-- BAKLAVA - Tek çeşit -->
+            <div class="product-card simple-product">
+                <div class="product-main">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-image">
+                            <img src="https://img.freepik.com/premium-photo/baklava-with-pistachio-nut-plate-layered-pastry-dessert-made-filo-pastry-sweetened-with-syrup-honey_493325-5614.jpg" alt="Baklava">
+                        </div>
+                        <div class="product-info">
+                            <h3>Baklava</h3>
+                            <div class="subtitle">Cevizli veya fıstıklı</div>
+                        </div>
+                    </div>
+                    <div class="product-price-main">160 ₺</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   <script>
+window.onload = function () {
+    var loader = document.getElementById("loader");
+    if(loader){
+        loader.style.display = "none";
+    }
+};
+
+// Eğer yukarıdaki çalışmazsa 3 saniye sonra zorla kapat
+setTimeout(function(){
+    var loader = document.getElementById("loader");
+    if(loader){
+        loader.style.display = "none";
+    }
+},3000);
+
+// Kategorileri göster
+function showCategories() {
+    document.getElementById('home').style.display = 'none';
+    document.getElementById('categories').classList.add('active');
+    window.scrollTo(0, 0);
+}
+
+// Sayfa göster
+function showPage(pageId) {
+    document.getElementById('categories').classList.remove('active');
+    document.getElementById(pageId).classList.add('active');
+    window.scrollTo(0, 0);
+}
+
+// Geri dön
+function goBack() {
+    document.querySelectorAll('.product-page').forEach(page => {
+        page.classList.remove('active');
+    });
+    document.getElementById('categories').classList.add('active');
+    window.scrollTo(0, 0);
+}
+
+// Seçenekleri aç/kapat
+function toggleOptions(card) {
+    // simple-product class'ı yoksa accordion çalışsın
+    if (card.classList.contains('simple-product')) return;
+    
+    const options = card.querySelector('.options-container');
+    const badge = card.querySelector('.variety-badge');
+
+    if (options.classList.contains('open')) {
+        options.classList.remove('open');
+        badge.textContent = badge.textContent.replace('↑','↓');
+    } else {
+        options.classList.add('open');
+        badge.textContent = badge.textContent.replace('↓','↑');
+    }
+}
+</script>
+</body>
+</html>
